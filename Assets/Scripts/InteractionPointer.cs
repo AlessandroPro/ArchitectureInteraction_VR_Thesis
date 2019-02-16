@@ -7,16 +7,17 @@ using Valve.VR;
 public class InteractionPointer : MonoBehaviour
 {
     public Transform controller;
-    public Transform hitObject;
+    public LaserPointer laser;
 
     public GameObject projectilePrefab;
     public GameObject hand;
-    public int numPoints = 80;
+    public int numPoints = 120;
 
     private Vector3 xVector;
     private Vector3 yVector;
     private GameObject[] projectiles;
     private float handTime;
+    private Vector3 connectedPoint;
 
     public SteamVR_Input_Sources handType;
     public SteamVR_Action_Boolean grabAction;
@@ -24,6 +25,8 @@ public class InteractionPointer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        connectedPoint = new Vector3(0, 0, 0);
+
         projectiles = new GameObject[numPoints];
         for (int i = 0; i < projectiles.Length; i++)
         {
@@ -36,7 +39,15 @@ public class InteractionPointer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        xVector = hitObject.position - controller.position;
+        //connectedPoint = laser.hitPoint;
+
+        
+        if(grabAction.GetStateDown(handType))
+        {
+            connectedPoint = laser.hitPoint;
+        }
+
+        xVector = connectedPoint - controller.position;
 
         float distance = xVector.magnitude;
         Vector3 hypVector = controller.forward;
@@ -75,9 +86,8 @@ public class InteractionPointer : MonoBehaviour
         handTime += Time.deltaTime*3;
         if(grabAction.GetStateDown(handType))
         {
-            Debug.Log("TRETETEE");
-            hand.transform.position = controller.position;
-            handTime = 0;
+            //hand.transform.position = controller.position;
+            //handTime = 0;
         }
         Vector3 xPos1 = xVector * Vx * handTime;
         Vector3 yPos1 = yVector * (Vy * handTime - 0.5f * 9.8f * handTime * handTime);

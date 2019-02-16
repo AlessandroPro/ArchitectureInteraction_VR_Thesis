@@ -11,10 +11,8 @@ public class LaserPointer : MonoBehaviour
     public SteamVR_Behaviour_Pose controllerPose;
     public SteamVR_Action_Boolean teleportAction;
 
-    public GameObject laserPrefab; // 1
-    private GameObject laser; // 2
-    private Transform laserTransform; // 3
-    private Vector3 hitPoint; // 4
+    public LineRenderer laserLine;
+    public Vector3 hitPoint; // 4
 
     // 1
     public Transform cameraRigTransform;
@@ -38,13 +36,7 @@ public class LaserPointer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // 1
-        laser = Instantiate(laserPrefab);
-        // 2
-        laserTransform = laser.transform;
-        // 1
         reticle = Instantiate(teleportReticlePrefab);
-        // 2
         teleportReticleTransform = reticle.transform;
     }
 
@@ -52,15 +44,15 @@ public class LaserPointer : MonoBehaviour
     void Update()
     {
         // 1
-        if (teleportAction.GetState(handType))
-        {
-            RaycastHit hit;
+        //if (teleportAction.GetState(handType))
+        // {
+        // 2
+        RaycastHit hit;
 
-            // 2
-            if (Physics.Raycast(controllerPose.transform.position, transform.forward, out hit, 100, teleportMask))
+            if (Physics.Raycast(controllerPose.transform.position, transform.forward, out hit, 100))
             {
                 hitPoint = hit.point;
-                ShowLaser(hit);
+                ShowLaser();
                 // 1
                 reticle.SetActive(true);
                 // 2
@@ -68,12 +60,18 @@ public class LaserPointer : MonoBehaviour
                 // 3
                 shouldTeleport = true;
             }
-        }
-        else // 
+        else
         {
-            laser.SetActive(false);
             reticle.SetActive(false);
+            hitPoint = transform.position + (transform.forward * 10f);
+            ShowLaser();
         }
+       // }
+       // else // 
+       // {
+        //    laser.enabled = true;
+       //     reticle.SetActive(false);
+       // }
 
         if (teleportAction.GetStateUp(handType) && shouldTeleport)
         {
@@ -83,18 +81,12 @@ public class LaserPointer : MonoBehaviour
 
     }
 
-    private void ShowLaser(RaycastHit hit)
+    private void ShowLaser()
     {
-        // 1
-        laser.SetActive(true);
-        // 2
-        laserTransform.position = Vector3.Lerp(controllerPose.transform.position, hitPoint, .5f);
-        // 3
-        laserTransform.LookAt(hitPoint);
-        // 4
-        laserTransform.localScale = new Vector3(laserTransform.localScale.x,
-                                                laserTransform.localScale.y,
-                                                hit.distance);
+        laserLine.enabled = true;
+
+        laserLine.SetPosition(0, transform.position);
+        laserLine.SetPosition(1, hitPoint);
     }
 
     private void Teleport()

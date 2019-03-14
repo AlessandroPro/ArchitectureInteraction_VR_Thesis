@@ -1,0 +1,4 @@
+Open the door: button F
+
+To open the doors, put the tag "player" on the controller
+

@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using Valve.VR;
+
 public abstract class Interactable : MonoBehaviour
 {
-    public Transform controller;
+    public SteamVR_Behaviour_Pose controllerPose;
     public Transform user;
 
     // Start is called before the first frame update
@@ -19,7 +21,7 @@ public abstract class Interactable : MonoBehaviour
         
     }
 
-    public abstract void HandleEnter();
+    public abstract void HandleEnter(SteamVR_Behaviour_Pose pose);
 
     public abstract void HandleExit();
 

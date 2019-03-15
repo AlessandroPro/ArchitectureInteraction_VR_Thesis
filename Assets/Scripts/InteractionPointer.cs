@@ -68,7 +68,7 @@ public class InteractionPointer : MonoBehaviour
                         selected.HandleExit();
                     }
                     selected = newSelected;
-                    selected.HandleEnter();
+                    selected.HandleEnter(controllerPose);
                 }
             }
             else
@@ -89,6 +89,10 @@ public class InteractionPointer : MonoBehaviour
                 HideLaser();
                 selected.HandleTriggerDown(hitPoint);
                 LaunchGrabber();
+            }
+            else if(grabAction.GetState(handType))
+            {
+                selected.HandleTriggerHold();
             }
             else if(grabAction.GetStateUp(handType))
             {

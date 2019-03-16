@@ -11,11 +11,24 @@ public class ModelBaseBehaviour : Interactable
     private Rigidbody baseBody;
     private Vector3 relativeControllerPos;
 
+    public GameObject ghostHand;
+    private GameObject[] spokes;
+    public GameObject spokePrefab;
+
     // Start is called before the first frame update
     void Start()
     {
         baseBody = GetComponent<Rigidbody>();
         relativeControllerPos = Vector3.zero;
+        grabbed = false;
+        spokes = new GameObject[16];
+
+        float spokeAngle = 360 / spokes.Length;
+        for(int i = 0; i < spokes.Length; i++)
+        {
+            spokes[i] = Instantiate(spokePrefab, transform);
+            spokes[i].transform.RotateAround(transform.position, Vector3.up, i * spokeAngle);
+        }
     }
 
     // Update is called once per frame
@@ -31,6 +44,35 @@ public class ModelBaseBehaviour : Interactable
     override public void HandleExit()
     {
         //Debug.Log("EXITTTTTTTTTT");
+    }
+
+    public override void HandleStay(Vector3 hitPoint)
+    {
+        if (!grabbed)
+        {
+            Vector3 centerToHit = hitPoint - transform.position;
+            centerToHit = new Vector3(centerToHit.x, 0, centerToHit.z);
+
+            float angle = Vector3.SignedAngle(centerToHit, transform.forward, Vector3.up);
+
+            if (angle < 0)
+            {
+                angle = 360f + angle;
+            }
+            angle = 360 - angle;
+            Debug.Log(angle);
+
+            float spokeAngleInterval = 360f / spokes.Length;
+            float spokeIndexFloat = angle / spokeAngleInterval;
+            int spokeIndex = Mathf.RoundToInt(spokeIndexFloat);
+
+            if (spokeIndex >= spokes.Length)
+            {
+                spokeIndex = 0;
+            }
+
+            ghostHand.transform.position = spokes[spokeIndex].transform.position;
+        }
     }
 
     override public void ShowHighlight() { }
@@ -51,24 +93,36 @@ public class ModelBaseBehaviour : Interactable
         slider.transform.LookAt(lookAtPos);
         slider.SetActive(true);
         initialRotation = transform.rotation;
+        grabbed = true;
     }
 
     override public void HandleTriggerHold()
     {
-        //Get the position of the controller relative to the slider
-        relativeControllerPos = slider.transform.InverseTransformPoint(controllerPose.transform.position);
+        if(grabbed)
+        {
+            //Get the position of the controller relative to the slider
+            relativeControllerPos = slider.transform.InverseTransformPoint(controllerPose.transform.position);
 
-        Quaternion target = Quaternion.Euler(0, -relativeControllerPos.x * 20f, 0) * initialRotation;
-        transform.rotation = Quaternion.Slerp(transform.rotation, target, Time.deltaTime * 5f);
+            Quaternion target = Quaternion.Euler(0, -relativeControllerPos.x * 20f, 0) * initialRotation;
+            transform.rotation = Quaternion.Slerp(transform.rotation, target, Time.deltaTime * 5f);
+        }
+        
     }
 
     override public void HandleTriggerUp()
     {
-        //float velY = controllerPose.GetVelocity().magnitude * Mathf.Sign(-relativeControllerPos.x);
-        // baseBody.angularVelocity = new Vector3(0, velY, 0);
-        Vector3 relativeControllerVelocity = slider.transform.InverseTransformDirection(controllerPose.GetVelocity());
-        baseBody.angularVelocity = new Vector3(0, -relativeControllerVelocity.x, 0);
-        slider.SetActive(false);
+        if (grabbed)
+        {
+            Vector3 relativeControllerVelocity = slider.transform.InverseTransformDirection(controllerPose.GetVelocity());
+            baseBody.angularVelocity = new Vector3(0, -relativeControllerVelocity.x * 2, 0);
+            slider.SetActive(false);
+            grabbed = false;
+        }
+    }
+
+    override public Transform GetGrabHandle(Vector3 hitPoint)
+    {
+        return ghostHand.transform;
     }
 
     /*

@@ -17,7 +17,7 @@ public class InteractionPointer : MonoBehaviour
     public Interactable selected;
 
     public GameObject grabSegmentPrefab;
-    public int numPoints = 100;
+    private int numPoints = 40;
 
     private Vector3 xVector;
     private Vector3 yVector;
@@ -25,17 +25,23 @@ public class InteractionPointer : MonoBehaviour
     private float handTime;
     private Vector3 connectFromPoint;
     private Vector3 connectToPoint;
-    private float grabberTime;
+
     public GameObject grabHandPrefab;
     private GameObject grabHand;
+    private Transform grabHandle;
+    private float grabberRate;
+    private float grabberFrac;
 
 
     // Start is called before the first frame update
     void Start()
     {
         connectFromPoint = transform.position;
-        connectToPoint = new Vector3(0, 0, 0);
+        connectToPoint = transform.position;
         grabHand = Instantiate(grabHandPrefab, transform.position, transform.rotation);
+
+        grabberFrac = 0;
+        grabberRate = 4;
 
         grabSegments = new GameObject[numPoints];
         for (int i = 0; i < grabSegments.Length; i++)
@@ -44,7 +50,6 @@ public class InteractionPointer : MonoBehaviour
         }
 
         handTime = 0;
-        grabberTime = 0;
         hitPoint = controllerPose.transform.position + (transform.forward * 100);
 
         ShowLaser();
@@ -84,10 +89,13 @@ public class InteractionPointer : MonoBehaviour
 
         if (selected)
         {
+            selected.HandleStay(hitPoint);
+
             if (grabAction.GetStateDown(handType))
             {
                 HideLaser();
                 selected.HandleTriggerDown(hitPoint);
+                grabHandle = selected.GetGrabHandle(hitPoint);
                 LaunchGrabber();
             }
             else if(grabAction.GetState(handType))
@@ -98,6 +106,7 @@ public class InteractionPointer : MonoBehaviour
             {
                 ShowLaser();
                 selected.HandleTriggerUp();
+                grabHandle = null;
                 RetractGrabber();
             }
         }
@@ -108,6 +117,7 @@ public class InteractionPointer : MonoBehaviour
 
     private void UpdateGrabber()
     {
+        /*
         xVector = grabHand.transform.position - transform.position;
 
         float distance = xVector.magnitude;
@@ -142,10 +152,56 @@ public class InteractionPointer : MonoBehaviour
 
             grabSegments[i].transform.position = transform.position + xPos + yPos;
 
+        }*/
+
+
+        ///// Bezier curve /////
+
+        Vector3 cp1 = transform.position;
+        Vector3 cp3 = grabHand.transform.position;
+
+        xVector = cp3 - cp1;
+        Vector3 hypVector = transform.forward;
+        float angle = Vector3.Angle(xVector, hypVector);
+
+        if(angle >= 45f)
+        {
+            angle = 45f;
+            hypVector = Vector3.RotateTowards(xVector, transform.forward, Mathf.Deg2Rad * angle, 0);
+            hypVector.Normalize();
         }
 
-        grabberTime += Time.deltaTime * 4;
-        grabHand.transform.position = Vector3.Lerp(connectFromPoint, connectToPoint, grabberTime);
+        float x = xVector.magnitude / 2f;
+        float z = x / Mathf.Cos(Mathf.Deg2Rad * angle);
+
+        Vector3 cp2 = cp1 + (z * hypVector);
+
+        float interval = 1f / grabSegments.Length;
+        float t = 0;
+
+        Vector3 b12, b23;
+        for (int i = 0; i < grabSegments.Length; i++)
+        {
+            b12 = Vector3.Lerp(cp1, cp2, t);
+            b23 = Vector3.Lerp(cp2, cp3, t);
+
+            grabSegments[i].transform.position = Vector3.Lerp(b12, b23, t);
+            t += interval;
+        }
+
+
+
+        if (grabHandle)
+        {
+            connectToPoint = grabHandle.transform.position;
+        }
+        else
+        {
+            connectFromPoint = transform.position;
+        }
+
+        grabberFrac += Time.deltaTime * grabberRate;
+        grabHand.transform.position = Vector3.Lerp(connectFromPoint, connectToPoint, grabberFrac);
     }
 
     private void ShowLaser()
@@ -169,16 +225,26 @@ public class InteractionPointer : MonoBehaviour
 
     private void LaunchGrabber()
     {
-        grabberTime = 0;
+        connectToPoint = grabHandle.position;
         connectToPoint = hitPoint;
         connectFromPoint = transform.position;
+
+        grabberFrac = 0;
+        if(grabberRate < 0)
+        {
+            grabberRate *= -1;
+        }
     }
 
     private void RetractGrabber()
     {
-        grabberTime = 0;
-        connectFromPoint = grabHand.transform.position;
-        connectToPoint = transform.position;
+        connectToPoint = grabHand.transform.position;
+        connectFromPoint = transform.position;
 
+        grabberFrac = 1;
+        if (grabberRate > 0)
+        {
+            grabberRate *= -1;
+        }
     }
 }

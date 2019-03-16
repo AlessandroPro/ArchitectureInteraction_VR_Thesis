@@ -8,6 +8,7 @@ public abstract class Interactable : MonoBehaviour
 {
     public SteamVR_Behaviour_Pose controllerPose;
     public Transform user;
+    protected bool grabbed;
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +26,8 @@ public abstract class Interactable : MonoBehaviour
 
     public abstract void HandleExit();
 
+    public abstract void HandleStay(Vector3 hitPoint);
+
     public abstract void ShowHighlight();
 
     public abstract void HideHighlight();
@@ -40,6 +43,8 @@ public abstract class Interactable : MonoBehaviour
     public abstract void HandleTriggerHold();
 
     public abstract void HandleTriggerUp();
+
+    public abstract Transform GetGrabHandle(Vector3 hitPoint);
 
 
 }

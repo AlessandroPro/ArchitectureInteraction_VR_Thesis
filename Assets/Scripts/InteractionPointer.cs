@@ -14,6 +14,7 @@ public class InteractionPointer : MonoBehaviour
     public LineRenderer laserLine;
     public Vector3 hitPoint;
     public LayerMask interactableMask;
+    public LayerMask buttonMask;
     public Interactable selected;
 
     public GameObject grabSegmentPrefab;
@@ -23,25 +24,21 @@ public class InteractionPointer : MonoBehaviour
     private Vector3 yVector;
     private GameObject[] grabSegments;
     private float handTime;
-    private Vector3 connectFromPoint;
     private Vector3 connectToPoint;
 
     public GameObject grabHandPrefab;
     private GameObject grabHand;
     private Transform grabHandle;
     private float grabberRate;
-    private float grabberFrac;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        connectFromPoint = transform.position;
         connectToPoint = transform.position;
         grabHand = Instantiate(grabHandPrefab, transform.position, transform.rotation);
 
-        grabberFrac = 0;
-        grabberRate = 4;
+        grabberRate = 7f;
 
         grabSegments = new GameObject[numPoints];
         for (int i = 0; i < grabSegments.Length; i++)
@@ -76,6 +73,10 @@ public class InteractionPointer : MonoBehaviour
                     selected.HandleEnter(controllerPose);
                 }
             }
+            else if(Physics.Raycast(controllerPose.transform.position, transform.forward, out hit, Mathf.Infinity, buttonMask))
+            {
+                //???
+            }
             else
             {
                 hitPoint = controllerPose.transform.position + (transform.forward * 100);
@@ -95,7 +96,7 @@ public class InteractionPointer : MonoBehaviour
             {
                 HideLaser();
                 selected.HandleTriggerDown(hitPoint);
-                grabHandle = selected.GetGrabHandle(hitPoint);
+                grabHandle = selected.ghostHand.transform;
                 LaunchGrabber();
             }
             else if(grabAction.GetState(handType))
@@ -117,43 +118,6 @@ public class InteractionPointer : MonoBehaviour
 
     private void UpdateGrabber()
     {
-        /*
-        xVector = grabHand.transform.position - transform.position;
-
-        float distance = xVector.magnitude;
-        Vector3 hypVector = transform.forward;
-        float angle = Vector3.Angle(xVector, hypVector);
-        if(angle > 50f)
-        {
-            hypVector = Vector3.RotateTowards(transform.forward, xVector, (angle * Mathf.Deg2Rad) - (50f * Mathf.Deg2Rad), 0.0f);
-            hypVector.Normalize();
-            angle = Vector3.Angle(xVector, hypVector);
-        }
-        float hyp = distance / Mathf.Cos(angle * Mathf.Deg2Rad);
-
-
-        yVector = (hypVector * hyp) - xVector;
-
-        xVector.Normalize();
-        yVector.Normalize();
-
-        float Vo = Mathf.Sqrt((distance * 9.8f) / Mathf.Sin(2 * angle * Mathf.Deg2Rad));
-        float Vx = Vo * Mathf.Cos(angle * Mathf.Deg2Rad);
-        float Vy = Vo * Mathf.Sin(angle * Mathf.Deg2Rad);
-
-        float timeTotal = 2 * Vo * Mathf.Sin(angle * Mathf.Deg2Rad) / 9.8f;
-        float interval = timeTotal / grabSegments.Length;
-        for (int i = 0; i < grabSegments.Length; i++)
-        {
-            float time = interval * i;
-
-            Vector3 xPos = xVector * Vx * time;
-            Vector3 yPos = yVector * (Vy * time - 0.5f * 9.8f * time * time);
-
-            grabSegments[i].transform.position = transform.position + xPos + yPos;
-
-        }*/
-
 
         ///// Bezier curve /////
 
@@ -189,19 +153,18 @@ public class InteractionPointer : MonoBehaviour
             t += interval;
         }
 
-
-
         if (grabHandle)
         {
             connectToPoint = grabHandle.transform.position;
         }
         else
         {
-            connectFromPoint = transform.position;
+            connectToPoint = transform.position;
+            //connectFromPoint = transform.position;
         }
 
-        grabberFrac += Time.deltaTime * grabberRate;
-        grabHand.transform.position = Vector3.Lerp(connectFromPoint, connectToPoint, grabberFrac);
+        float grabberStep = Time.deltaTime * grabberRate;
+        grabHand.transform.position = Vector3.MoveTowards(grabHand.transform.position, connectToPoint, grabberStep);
     }
 
     private void ShowLaser()
@@ -226,25 +189,55 @@ public class InteractionPointer : MonoBehaviour
     private void LaunchGrabber()
     {
         connectToPoint = grabHandle.position;
-        connectToPoint = hitPoint;
-        connectFromPoint = transform.position;
-
-        grabberFrac = 0;
-        if(grabberRate < 0)
-        {
-            grabberRate *= -1;
-        }
     }
 
     private void RetractGrabber()
     {
-        connectToPoint = grabHand.transform.position;
-        connectFromPoint = transform.position;
-
-        grabberFrac = 1;
-        if (grabberRate > 0)
-        {
-            grabberRate *= -1;
-        }
+        connectToPoint = transform.position;
     }
 }
+
+
+
+
+
+
+
+
+
+/*
+xVector = grabHand.transform.position - transform.position;
+
+float distance = xVector.magnitude;
+Vector3 hypVector = transform.forward;
+float angle = Vector3.Angle(xVector, hypVector);
+if(angle > 50f)
+{
+    hypVector = Vector3.RotateTowards(transform.forward, xVector, (angle * Mathf.Deg2Rad) - (50f * Mathf.Deg2Rad), 0.0f);
+    hypVector.Normalize();
+    angle = Vector3.Angle(xVector, hypVector);
+}
+float hyp = distance / Mathf.Cos(angle * Mathf.Deg2Rad);
+
+
+yVector = (hypVector * hyp) - xVector;
+
+xVector.Normalize();
+yVector.Normalize();
+
+float Vo = Mathf.Sqrt((distance * 9.8f) / Mathf.Sin(2 * angle * Mathf.Deg2Rad));
+float Vx = Vo * Mathf.Cos(angle * Mathf.Deg2Rad);
+float Vy = Vo * Mathf.Sin(angle * Mathf.Deg2Rad);
+
+float timeTotal = 2 * Vo * Mathf.Sin(angle * Mathf.Deg2Rad) / 9.8f;
+float interval = timeTotal / grabSegments.Length;
+for (int i = 0; i < grabSegments.Length; i++)
+{
+    float time = interval * i;
+
+    Vector3 xPos = xVector * Vx * time;
+    Vector3 yPos = yVector * (Vy * time - 0.5f * 9.8f * time * time);
+
+    grabSegments[i].transform.position = transform.position + xPos + yPos;
+
+}*/

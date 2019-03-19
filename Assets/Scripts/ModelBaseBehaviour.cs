@@ -7,13 +7,20 @@ using Valve.VR;
 public class ModelBaseBehaviour : Interactable
 {
     public GameObject slider;
+    public GameObject buttonCW;
+    public GameObject buttonCCW;
+    public GameObject buttonPair;
     private Quaternion initialRotation;
     private Rigidbody baseBody;
     private Vector3 relativeControllerPos;
 
-    public GameObject ghostHand;
     private GameObject[] spokes;
     public GameObject spokePrefab;
+
+    private float hiddenButtonsY;
+    private float shownButtonsY;
+    private float buttonsPosY;
+    private float buttonSpeed;
 
     // Start is called before the first frame update
     void Start()
@@ -29,21 +36,47 @@ public class ModelBaseBehaviour : Interactable
             spokes[i] = Instantiate(spokePrefab, transform);
             spokes[i].transform.RotateAround(transform.position, Vector3.up, i * spokeAngle);
         }
+
+        shownButtonsY = buttonPair.transform.position.y - transform.position.y;
+        hiddenButtonsY = shownButtonsY - 0.05f;
+        buttonSpeed = 0.2f;
+
+        buttonsPosY = shownButtonsY;
     }
 
     // Update is called once per frame
     void Update()
     {
+        float step = Time.deltaTime * buttonSpeed;
+        Vector3 buttonsNewPos = new Vector3(buttonPair.transform.position.x, transform.position.y + buttonsPosY, buttonPair.transform.position.z);
+        buttonPair.transform.position = Vector3.MoveTowards(buttonPair.transform.position, buttonsNewPos, step);
     }
 
     override public void HandleEnter(SteamVR_Behaviour_Pose pose)
     {
         controllerPose = pose;
+
+        Vector3 centerToUser = user.transform.position - transform.position;
+        Vector3 centreToButtons = buttonPair.transform.position - transform.position;
+        float buttonPairYPos = buttonPair.transform.position.y;
+
+        centerToUser = new Vector3(centerToUser.x, 0, centerToUser.z);
+        centreToButtons = new Vector3(centreToButtons.x, 0, centreToButtons.z);
+
+        float centreToButtonsRadius = centreToButtons.magnitude;
+
+        buttonPair.transform.position = transform.position + (centerToUser.normalized * centreToButtonsRadius);
+        buttonPair.transform.position = new Vector3(buttonPair.transform.position.x, buttonPairYPos, buttonPair.transform.position.z);
+        buttonPair.transform.LookAt(buttonPair.transform.position + centerToUser.normalized); 
+
+        ShowButtons();
     }
 
     override public void HandleExit()
     {
-        //Debug.Log("EXITTTTTTTTTT");
+        slider.SetActive(false);
+        HideButtons();
+
     }
 
     public override void HandleStay(Vector3 hitPoint)
@@ -60,7 +93,6 @@ public class ModelBaseBehaviour : Interactable
                 angle = 360f + angle;
             }
             angle = 360 - angle;
-            Debug.Log(angle);
 
             float spokeAngleInterval = 360f / spokes.Length;
             float spokeIndexFloat = angle / spokeAngleInterval;
@@ -94,6 +126,7 @@ public class ModelBaseBehaviour : Interactable
         slider.SetActive(true);
         initialRotation = transform.rotation;
         grabbed = true;
+        HideButtons();
     }
 
     override public void HandleTriggerHold()
@@ -117,12 +150,18 @@ public class ModelBaseBehaviour : Interactable
             baseBody.angularVelocity = new Vector3(0, -relativeControllerVelocity.x * 2, 0);
             slider.SetActive(false);
             grabbed = false;
+            ShowButtons();
         }
     }
 
-    override public Transform GetGrabHandle(Vector3 hitPoint)
+    private void HideButtons()
     {
-        return ghostHand.transform;
+        buttonsPosY = hiddenButtonsY;
+    }
+
+    private void ShowButtons()
+    {
+        buttonsPosY = shownButtonsY;
     }
 
     /*

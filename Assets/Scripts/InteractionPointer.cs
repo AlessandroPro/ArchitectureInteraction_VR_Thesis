@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using Valve.VR;
+using Valve.VR.InteractionSystem;
 
 public class InteractionPointer : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class InteractionPointer : MonoBehaviour
     public SteamVR_Input_Sources handType;
     public SteamVR_Behaviour_Pose controllerPose;
     public SteamVR_Action_Boolean grabAction;
+    public SteamVR_Action_Boolean buttonAction;
+    public SteamVR_Action_Vector2 chooseAction;
 
     public LineRenderer laserLine;
     public Vector3 hitPoint;
@@ -91,6 +94,12 @@ public class InteractionPointer : MonoBehaviour
         if (selected)
         {
             selected.HandleStay(hitPoint);
+
+            if(buttonAction.GetState(handType))
+            {
+                selected.HandleTrackPadPos(chooseAction.GetAxis(handType));
+            }
+            
 
             if (grabAction.GetStateDown(handType))
             {

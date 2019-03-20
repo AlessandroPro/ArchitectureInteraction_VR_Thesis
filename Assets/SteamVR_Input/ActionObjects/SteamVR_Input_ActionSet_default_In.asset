@@ -19,7 +19,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 25a1f1772ff152e4c9c24b18d1aa6b5b, type: 2}
   - {fileID: 11400000, guid: dc0b590cad630d04086a256c197ed202, type: 2}
   - {fileID: 11400000, guid: c154005c55cbb2e4aa2002f3809a8b3b, type: 2}
+  - {fileID: 11400000, guid: 0f9c2a2b63b508844a5a19bb621ef3c6, type: 2}
   Teleport: {fileID: 11400000, guid: 09abe8e1293b19642840e541de696ed2, type: 2}
   Grab: {fileID: 11400000, guid: 25a1f1772ff152e4c9c24b18d1aa6b5b, type: 2}
   SkeletonLeftHand: {fileID: 11400000, guid: dc0b590cad630d04086a256c197ed202, type: 2}
   SkeletonRightHand: {fileID: 11400000, guid: c154005c55cbb2e4aa2002f3809a8b3b, type: 2}
+  PushArrow: {fileID: 11400000, guid: 0f9c2a2b63b508844a5a19bb621ef3c6, type: 2}

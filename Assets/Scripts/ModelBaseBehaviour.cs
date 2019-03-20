@@ -6,7 +6,6 @@ using Valve.VR;
 
 public class ModelBaseBehaviour : Interactable
 {
-    public GameObject slider;
     public GameObject buttonCW;
     public GameObject buttonCCW;
     public GameObject buttonPair;
@@ -49,13 +48,14 @@ public class ModelBaseBehaviour : Interactable
     {
         float step = Time.deltaTime * buttonSpeed;
         Vector3 buttonsNewPos = new Vector3(buttonPair.transform.position.x, transform.position.y + buttonsPosY, buttonPair.transform.position.z);
-        buttonPair.transform.position = Vector3.MoveTowards(buttonPair.transform.position, buttonsNewPos, step);
+        //buttonPair.transform.position = Vector3.MoveTowards(buttonPair.transform.position, buttonsNewPos, step);
     }
 
     override public void HandleEnter(SteamVR_Behaviour_Pose pose)
     {
         controllerPose = pose;
 
+        /*
         Vector3 centerToUser = user.transform.position - transform.position;
         Vector3 centreToButtons = buttonPair.transform.position - transform.position;
         float buttonPairYPos = buttonPair.transform.position.y;
@@ -70,6 +70,7 @@ public class ModelBaseBehaviour : Interactable
         buttonPair.transform.LookAt(buttonPair.transform.position + centerToUser.normalized); 
 
         ShowButtons();
+        */
     }
 
     override public void HandleExit()
@@ -123,10 +124,11 @@ public class ModelBaseBehaviour : Interactable
         slider.transform.position = controllerPose.transform.position;
         Vector3 lookAtPos = new Vector3(transform.position.x, slider.transform.position.y, transform.position.z);
         slider.transform.LookAt(lookAtPos);
-        slider.SetActive(true);
+        //slider.SetActive(true);
         initialRotation = transform.rotation;
         grabbed = true;
-        HideButtons();
+        //HideButtons();
+        ShowButtons();
     }
 
     override public void HandleTriggerHold()
@@ -147,21 +149,47 @@ public class ModelBaseBehaviour : Interactable
         if (grabbed)
         {
             Vector3 relativeControllerVelocity = slider.transform.InverseTransformDirection(controllerPose.GetVelocity());
-            baseBody.angularVelocity = new Vector3(0, -relativeControllerVelocity.x * 2, 0);
+            //if (Mathf.Abs(relativeControllerVelocity.y) > 0.1f)
+            //{
+                baseBody.angularVelocity = new Vector3(0, -relativeControllerVelocity.x * 2, 0);
+            //}
             slider.SetActive(false);
             grabbed = false;
-            ShowButtons();
+            //ShowButtons();
+            HideButtons();
+        }
+    }
+
+    public override void HandleTrackPadPos(Vector2 pos)
+    {
+        if(grabbed)
+        {
+            if(pos.x <= 0)
+            {
+                transform.Rotate(0, 1, 0);
+            }
+            else if(pos.x > 0)
+            {
+                transform.Rotate(0, -1, 0);
+            }
+            initialRotation = transform.rotation;
+            baseBody.angularVelocity = Vector3.zero;
+            slider.transform.position = controllerPose.transform.position;
+            Vector3 lookAtPos = new Vector3(transform.position.x, slider.transform.position.y, transform.position.z);
+            slider.transform.LookAt(lookAtPos);
         }
     }
 
     private void HideButtons()
     {
-        buttonsPosY = hiddenButtonsY;
+        //buttonsPosY = hiddenButtonsY;
+        buttonPair.SetActive(false);
     }
 
     private void ShowButtons()
     {
-        buttonsPosY = shownButtonsY;
+        // buttonsPosY = shownButtonsY;
+        buttonPair.SetActive(true);
     }
 
     /*

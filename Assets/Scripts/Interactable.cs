@@ -10,6 +10,7 @@ public abstract class Interactable : MonoBehaviour
     public Transform user;
     protected bool grabbed;
     public GameObject ghostHand;
+    public GameObject slider;
 
     // Start is called before the first frame update
     void Start()
@@ -45,4 +46,5 @@ public abstract class Interactable : MonoBehaviour
 
     public abstract void HandleTriggerUp();
 
+    public abstract void HandleTrackPadPos(Vector2 pos);
 }

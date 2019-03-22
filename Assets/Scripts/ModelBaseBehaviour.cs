@@ -127,7 +127,6 @@ public class ModelBaseBehaviour : Interactable
         //slider.SetActive(true);
         initialRotation = transform.rotation;
         grabbed = true;
-        //HideButtons();
         ShowButtons();
     }
 

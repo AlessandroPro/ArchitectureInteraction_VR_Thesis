@@ -93,7 +93,7 @@ public class ModelBaseBehaviour : Interactable
             {
                 angle = 360f + angle;
             }
-            angle = 360 - angle;
+            angle = 360f - angle;
 
             float spokeAngleInterval = 360f / spokes.Length;
             float spokeIndexFloat = angle / spokeAngleInterval;

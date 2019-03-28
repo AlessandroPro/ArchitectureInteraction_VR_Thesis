@@ -12,6 +12,7 @@ public class InteractionPointer : MonoBehaviour
     public SteamVR_Behaviour_Pose controllerPose;
     public SteamVR_Action_Boolean grabAction;
     public SteamVR_Action_Boolean buttonAction;
+    public SteamVR_Action_Boolean toggleModelAction;
     public SteamVR_Action_Vector2 chooseAction;
 
     public LineRenderer laserLine;
@@ -121,6 +122,11 @@ public class InteractionPointer : MonoBehaviour
             }
         }
 
+        if(toggleModelAction.GetStateDown(handType))
+        {
+            toggleScaleModel();
+        }
+
         UpdateLaser();
         UpdateGrabber();
     }
@@ -203,6 +209,11 @@ public class InteractionPointer : MonoBehaviour
     private void RetractGrabber()
     {
         connectToPoint = transform.position;
+    }
+
+    private void toggleScaleModel()
+    {
+
     }
 }
 

@@ -23,6 +23,10 @@
       "type": "vector2"
     },
     {
+      "name": "/actions/default/in/ToggleModel",
+      "type": "boolean"
+    },
+    {
       "name": "/actions/default/out/Haptic",
       "type": "vibration"
     }
@@ -69,7 +73,9 @@
       "/actions/platformer/in/Move": "Move",
       "/actions/platformer/in/Jump": "Jump",
       "/actions/default/in/PushArrow": "ChooseDirection",
-      "/actions/default/in/ChooseDirection": "ChooseDirection"
+      "/actions/default/in/ChooseDirection": "ChooseDirection",
+      "/actions/default/in/Summon": "Summon",
+      "/actions/default/in/ToggleModel": "ToggleModel"
     }
   ]
 }

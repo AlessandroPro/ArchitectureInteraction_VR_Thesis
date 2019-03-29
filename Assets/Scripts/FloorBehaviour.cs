@@ -8,15 +8,20 @@ public class FloorBehaviour : Interactable
 {
     public GameObject fullScaleModel;
     public GameObject smallScaleModel;
+    public GameObject smallScaleModelTable;
+    public GameObject smallScaleModelTableGhosted;
+    public TableTeleporter tableTeleporter;
     private Vector3 centerPos;
 
     public GameObject avatar;
     public Transform cameraRig;
     public GameObject cuttingPlane;
+
     private Vector3 relativeControllerPos;
     private Quaternion initialRotation;
 
     public bool isSmallScale;
+    public bool useCuttingPlane;
     private bool isGhosted;
 
     // Start is called before the first frame update
@@ -30,6 +35,7 @@ public class FloorBehaviour : Interactable
         isGhosted = false;
 
         avatar.SetActive(false);
+        smallScaleModelTableGhosted.SetActive(false);
     }
 
     // Update is called once per frame
@@ -51,12 +57,14 @@ public class FloorBehaviour : Interactable
     {
         controllerPose = pose;
         avatar.SetActive(true);
+       // smallScaleModelTableGhosted.SetActive(true);
     }
 
     override public void HandleExit()
     {
         slider.SetActive(false);
         avatar.SetActive(false);
+        //smallScaleModelTableGhosted.SetActive(false);
         //HideButtons();
     }
 
@@ -67,6 +75,18 @@ public class FloorBehaviour : Interactable
             ghostHand.transform.position = hitPoint;
             Vector3 controllerForwardXZ = new Vector3(controllerPose.transform.forward.x, 0, controllerPose.transform.forward.z);
             avatar.transform.LookAt(avatar.transform.position + controllerForwardXZ);
+            if (!isSmallScale)
+            {
+                //smallScaleModelTableGhosted.transform.position = hitPoint;
+                //smallScaleModelTable.transform.position = hitPoint;
+            }
+        }
+        else
+        {
+            if (!isSmallScale)
+            {
+                smallScaleModelTableGhosted.SetActive(false);
+            }
         }
         avatar.transform.position = ghostHand.transform.position;
     }
@@ -75,7 +95,13 @@ public class FloorBehaviour : Interactable
 
     override public void HideHighlight() { }
 
-    override public void HandleButtonClickDown() { }
+    override public void HandleButtonClickDown()
+    {
+        if(!isSmallScale)
+        {
+            tableTeleporter.SetNewPositions(ghostHand.transform.position, useCuttingPlane);
+        }
+    }
 
     override public void HandleButtonClickHold() { }
 
@@ -151,6 +177,7 @@ public class FloorBehaviour : Interactable
 
     private void TeleportUser()
     {
+        
         Vector3 userForward = new Vector3(user.transform.forward.x, 0, user.transform.forward.z);
 
         if (isSmallScale)

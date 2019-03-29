@@ -9,6 +9,7 @@ public class ModelBaseBehaviour : Interactable
     public GameObject buttonCW;
     public GameObject buttonCCW;
     public GameObject buttonPair;
+    public GameObject cameraRig;
     private Quaternion initialRotation;
     private Rigidbody baseBody;
     private Vector3 relativeControllerPos;
@@ -147,7 +148,9 @@ public class ModelBaseBehaviour : Interactable
     {
         if (grabbed)
         {
-            Vector3 relativeControllerVelocity = slider.transform.InverseTransformDirection(controllerPose.GetVelocity());
+            float angle = Vector3.SignedAngle(Vector3.forward, cameraRig.transform.forward, Vector3.up);
+            Vector3 velocity = Quaternion.Euler(0, angle, 0) * controllerPose.GetVelocity();
+            Vector3 relativeControllerVelocity = slider.transform.InverseTransformDirection(velocity);
             //if (Mathf.Abs(relativeControllerVelocity.y) > 0.1f)
             //{
                 baseBody.angularVelocity = new Vector3(0, -relativeControllerVelocity.x * 2, 0);

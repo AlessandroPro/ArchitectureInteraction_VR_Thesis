@@ -99,6 +99,7 @@ public class InteractionPointer : MonoBehaviour
             if(buttonAction.GetState(handType))
             {
                 selected.HandleTrackPadPos(chooseAction.GetAxis(handType));
+                selected.HandleButtonClickDown();
             }
             
 
@@ -124,7 +125,7 @@ public class InteractionPointer : MonoBehaviour
 
         if(toggleModelAction.GetStateDown(handType))
         {
-            toggleScaleModel();
+            //toggleScaleModel();
         }
 
         UpdateLaser();
@@ -209,11 +210,6 @@ public class InteractionPointer : MonoBehaviour
     private void RetractGrabber()
     {
         connectToPoint = transform.position;
-    }
-
-    private void toggleScaleModel()
-    {
-
     }
 }
 

@@ -15,6 +15,7 @@ public class TableTeleporter : MonoBehaviour
     private float planeSpeed;
     private Vector3 planePosStartDiff;
     private Vector3 planePosEndDiff;
+    private Vector3 previousRigPos;
 
     // Start is called before the first frame update
     void Start()
@@ -25,11 +26,27 @@ public class TableTeleporter : MonoBehaviour
         planeSpeed = 6;
         planePosStartDiff = new Vector3(0, 4, 0);
         planePosEndDiff = new Vector3(0, 0.15f, 0);
+        previousRigPos = cameraRig.transform.position;
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        float yDiff = Mathf.Abs(cameraRig.transform.position.y - previousRigPos.y);
+        if(yDiff > 0.01f)
+        {
+            HideTable();
+        }
+        previousRigPos = cameraRig.transform.position;
+
+        previousRigPos = cameraRig.transform.position;
+        if(!smallScaleModelTable.activeSelf)
+        {
+            cuttingPlaneTargetPos = defaultCuttingPlanePos;
+            cuttingPlane.transform.position = defaultCuttingPlanePos;
+        }
+
         float step = planeSpeed * Time.deltaTime;
         cuttingPlane.transform.position = Vector3.MoveTowards(cuttingPlane.transform.position, cuttingPlaneTargetPos, step);
     }
@@ -48,5 +65,16 @@ public class TableTeleporter : MonoBehaviour
         {
             cuttingPlane.transform.position = defaultCuttingPlanePos;
         }
+        ShowTable();
+    }
+
+    public void ShowTable()
+    {
+        smallScaleModelTable.SetActive(true);
+    }
+
+    public void HideTable()
+    {
+        smallScaleModelTable.SetActive(false);
     }
 }

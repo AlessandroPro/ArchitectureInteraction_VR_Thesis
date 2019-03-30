@@ -11,6 +11,7 @@ public abstract class Interactable : MonoBehaviour
     protected bool grabbed;
     public GameObject ghostHand;
     public GameObject slider;
+    public Material laserMat;
 
     // Start is called before the first frame update
     void Start()
@@ -47,4 +48,9 @@ public abstract class Interactable : MonoBehaviour
     public abstract void HandleTriggerUp();
 
     public abstract void HandleTrackPadPos(Vector2 pos);
+
+    public virtual Material GetLaserMaterial()
+    {
+        return laserMat;
+    }
 }

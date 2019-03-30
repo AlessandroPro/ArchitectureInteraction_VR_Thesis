@@ -16,9 +16,9 @@ public class InteractionPointer : MonoBehaviour
     public SteamVR_Action_Vector2 chooseAction;
 
     public LineRenderer laserLine;
+    public Material defaultLaserMat;
     public Vector3 hitPoint;
     public LayerMask interactableMask;
-    public LayerMask buttonMask;
     public Interactable selected;
 
     public GameObject grabSegmentPrefab;
@@ -42,7 +42,7 @@ public class InteractionPointer : MonoBehaviour
         connectToPoint = transform.position;
         grabHand = Instantiate(grabHandPrefab, transform.position, transform.rotation);
 
-        grabberRate = 7f;
+        grabberRate = 20f;
 
         grabSegments = new GameObject[numPoints];
         for (int i = 0; i < grabSegments.Length; i++)
@@ -75,11 +75,8 @@ public class InteractionPointer : MonoBehaviour
                     }
                     selected = newSelected;
                     selected.HandleEnter(controllerPose);
+                    ChangeLaserMat(selected.GetLaserMaterial());
                 }
-            }
-            else if(Physics.Raycast(controllerPose.transform.position, transform.forward, out hit, Mathf.Infinity, buttonMask))
-            {
-                //???
             }
             else
             {
@@ -87,6 +84,7 @@ public class InteractionPointer : MonoBehaviour
                 if (selected)
                 {
                     selected.HandleExit();
+                    ChangeLaserMat(defaultLaserMat);
                 }
                 selected = null;
             }
@@ -210,6 +208,16 @@ public class InteractionPointer : MonoBehaviour
     private void RetractGrabber()
     {
         connectToPoint = transform.position;
+    }
+
+    private void ChangeLaserMat(Material mat)
+    {
+        laserLine.material = mat;
+
+        for (int i = 0; i < grabSegments.Length; i++)
+        {
+            grabSegments[i].GetComponent<MeshRenderer>().material = mat;
+        }
     }
 }
 

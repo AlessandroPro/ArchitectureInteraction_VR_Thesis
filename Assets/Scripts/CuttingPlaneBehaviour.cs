@@ -18,6 +18,7 @@ public class CuttingPlaneBehaviour : Interactable
     {
         cpBody = cpFixture.GetComponent<Rigidbody>();
         relativeControllerPos = Vector3.zero;
+        ghostHand.SetActive(false);
         grabbed = false;
     }
 
@@ -30,11 +31,13 @@ public class CuttingPlaneBehaviour : Interactable
     override public void HandleEnter(SteamVR_Behaviour_Pose pose)
     {
         controllerPose = pose;
+        ghostHand.SetActive(true);
     }
 
     override public void HandleExit()
     {
         slider.SetActive(false);
+        ghostHand.SetActive(false);
         //HideButtons();
     }
 
@@ -42,7 +45,12 @@ public class CuttingPlaneBehaviour : Interactable
     {
         if (!grabbed)
         {
-            ghostHand.transform.position = joint.transform.position;
+            Vector3 jointPos = joint.transform.position;
+
+            Vector3 offset = new Vector3(0, -0.15f, -0.15f);
+            ghostHand.transform.position = jointPos + offset;
+            ghostHand.transform.LookAt(new Vector3(jointPos.x, ghostHand.transform.position.y, jointPos.z));
+            ghostHand.transform.LookAt(ghostHand.transform.position + Vector3.up);
         }
     }
 

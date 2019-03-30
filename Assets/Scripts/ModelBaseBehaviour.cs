@@ -27,6 +27,7 @@ public class ModelBaseBehaviour : Interactable
     {
         baseBody = GetComponent<Rigidbody>();
         relativeControllerPos = Vector3.zero;
+        ghostHand.SetActive(false);
         grabbed = false;
         spokes = new GameObject[16];
 
@@ -50,11 +51,14 @@ public class ModelBaseBehaviour : Interactable
         float step = Time.deltaTime * buttonSpeed;
         Vector3 buttonsNewPos = new Vector3(buttonPair.transform.position.x, transform.position.y + buttonsPosY, buttonPair.transform.position.z);
         //buttonPair.transform.position = Vector3.MoveTowards(buttonPair.transform.position, buttonsNewPos, step);
+
+        ghostHand.transform.LookAt(new Vector3(transform.position.x, ghostHand.transform.position.y, transform.position.z));
     }
 
     override public void HandleEnter(SteamVR_Behaviour_Pose pose)
     {
         controllerPose = pose;
+        ghostHand.SetActive(true);
 
         /*
         Vector3 centerToUser = user.transform.position - transform.position;
@@ -77,6 +81,7 @@ public class ModelBaseBehaviour : Interactable
     override public void HandleExit()
     {
         slider.SetActive(false);
+        ghostHand.SetActive(false);
         HideButtons();
 
     }
@@ -105,7 +110,9 @@ public class ModelBaseBehaviour : Interactable
                 spokeIndex = 0;
             }
 
-            ghostHand.transform.position = spokes[spokeIndex].transform.position;
+            Vector3 offset = (spokes[spokeIndex].transform.position - transform.position).normalized * 0.2f;
+            offset = new Vector3(offset.x, 0, offset.z);
+            ghostHand.transform.position = spokes[spokeIndex].transform.position + offset;
         }
     }
 
@@ -125,7 +132,7 @@ public class ModelBaseBehaviour : Interactable
         slider.transform.position = controllerPose.transform.position;
         Vector3 lookAtPos = new Vector3(transform.position.x, slider.transform.position.y, transform.position.z);
         slider.transform.LookAt(lookAtPos);
-        //slider.SetActive(true);
+        slider.SetActive(true);
         initialRotation = transform.rotation;
         grabbed = true;
         ShowButtons();

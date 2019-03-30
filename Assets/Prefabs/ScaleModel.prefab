@@ -376,83 +376,6 @@ MonoBehaviour:
   normal: {x: 0, y: 0, z: 0}
   position: {x: 0, y: 0, z: 0}
   rend: {fileID: 183247350664849816}
---- !u!1 &798994582847883326
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5524735376493392090}
-  - component: {fileID: 436808006906310550}
-  - component: {fileID: 8387674380088739294}
-  m_Layer: 0
-  m_Name: GhostHand
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5524735376493392090
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 798994582847883326}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.0219212, y: -0.2088139, z: 2.13274}
-  m_LocalScale: {x: 0.19999999, y: 0.19999999, z: 0.19999999}
-  m_Children: []
-  m_Father: {fileID: 779590408400640493}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &436808006906310550
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 798994582847883326}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &8387674380088739294
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 798994582847883326}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 0
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
 --- !u!1 &972170699826197770
 GameObject:
   m_ObjectHideFlags: 0
@@ -828,7 +751,16 @@ MonoBehaviour:
   user: {fileID: 0}
   ghostHand: {fileID: 0}
   slider: {fileID: 0}
+  fullScaleModel: {fileID: 0}
+  smallScaleModel: {fileID: 0}
+  smallScaleModelTable: {fileID: 0}
+  smallScaleModelTableGhosted: {fileID: 0}
+  tableTeleporter: {fileID: 0}
   avatar: {fileID: 0}
+  cameraRig: {fileID: 0}
+  cuttingPlane: {fileID: 0}
+  isSmallScale: 0
+  useCuttingPlane: 0
 --- !u!54 &3931447374840751748
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1366,7 +1298,16 @@ MonoBehaviour:
   user: {fileID: 0}
   ghostHand: {fileID: 0}
   slider: {fileID: 0}
+  fullScaleModel: {fileID: 0}
+  smallScaleModel: {fileID: 0}
+  smallScaleModelTable: {fileID: 0}
+  smallScaleModelTableGhosted: {fileID: 0}
+  tableTeleporter: {fileID: 0}
   avatar: {fileID: 0}
+  cameraRig: {fileID: 0}
+  cuttingPlane: {fileID: 0}
+  isSmallScale: 0
+  useCuttingPlane: 0
 --- !u!54 &5190379689822238476
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2630,7 +2571,16 @@ MonoBehaviour:
   user: {fileID: 0}
   ghostHand: {fileID: 0}
   slider: {fileID: 0}
+  fullScaleModel: {fileID: 0}
+  smallScaleModel: {fileID: 0}
+  smallScaleModelTable: {fileID: 0}
+  smallScaleModelTableGhosted: {fileID: 0}
+  tableTeleporter: {fileID: 0}
   avatar: {fileID: 0}
+  cameraRig: {fileID: 0}
+  cuttingPlane: {fileID: 0}
+  isSmallScale: 0
+  useCuttingPlane: 0
 --- !u!54 &3048077377688654090
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2830,7 +2780,6 @@ Transform:
   m_Children:
   - {fileID: 6637018326443646367}
   - {fileID: 4837310624022346843}
-  - {fileID: 5524735376493392090}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

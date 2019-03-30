@@ -32,10 +32,21 @@ public class FloorBehaviour : Interactable
         relativeControllerPos = Vector3.zero;
 
         grabbed = false;
-        isGhosted = false;
+
 
         avatar.SetActive(false);
         smallScaleModelTableGhosted.SetActive(false);
+
+        if (cuttingPlane.transform.position.y < centerPos.y)
+        {
+            GetComponent<Collider>().enabled = false;
+            isGhosted = true;
+        }
+        else if (cuttingPlane.transform.position.y > centerPos.y)
+        {
+            GetComponent<Collider>().enabled = true;
+            isGhosted = false;
+        }
     }
 
     // Update is called once per frame
@@ -97,7 +108,7 @@ public class FloorBehaviour : Interactable
 
     override public void HandleButtonClickDown()
     {
-        if(!isSmallScale)
+        if(!isSmallScale && !grabbed)
         {
             tableTeleporter.SetNewPositions(ghostHand.transform.position, useCuttingPlane);
         }

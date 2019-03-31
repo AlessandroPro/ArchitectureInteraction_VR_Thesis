@@ -99,7 +99,10 @@ public class InteractionPointer : MonoBehaviour
                 selected.HandleTrackPadPos(chooseAction.GetAxis(handType));
                 selected.HandleButtonClickDown();
             }
-            
+            else if(buttonAction.GetStateUp(handType))
+            {
+                selected.HandleButtonClickUp();
+            }            
 
             if (grabAction.GetStateDown(handType))
             {

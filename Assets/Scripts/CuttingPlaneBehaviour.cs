@@ -8,7 +8,6 @@ public class CuttingPlaneBehaviour : Interactable
 {
 
     private float initialHeight;
-    public GameObject buttonPair;
 
     public GameObject joint;
     public GameObject cpFixture;
@@ -32,13 +31,15 @@ public class CuttingPlaneBehaviour : Interactable
     {
         controllerPose = pose;
         ghostHand.SetActive(true);
+        ShowHighlight();
     }
 
     override public void HandleExit()
     {
         slider.SetActive(false);
         ghostHand.SetActive(false);
-        //HideButtons();
+        HideHighlight();
+        SwapButtonSet(modelButton, buttonPair);
     }
 
     public override void HandleStay(Vector3 hitPoint)
@@ -54,15 +55,15 @@ public class CuttingPlaneBehaviour : Interactable
         }
     }
 
-    override public void ShowHighlight() { }
-
-    override public void HideHighlight() { }
-
     override public void HandleButtonClickDown() { }
 
     override public void HandleButtonClickHold() { }
 
-    override public void HandleButtonClickUp() { }
+    override public void HandleButtonClickUp()
+    {
+        buttonPair.RemoveButtonHighlights();
+        modelButton.RemoveButtonHighlights();
+    }
 
     override public void HandleTriggerDown(Vector3 hitPoint)
     {
@@ -70,11 +71,10 @@ public class CuttingPlaneBehaviour : Interactable
         slider.transform.position = controllerPose.transform.position;
         Vector3 lookAtPos = new Vector3(cpFixture.transform.position.x, slider.transform.position.y, cpFixture.transform.position.z);
         slider.transform.LookAt(lookAtPos);
-        slider.SetActive(true);
+        //slider.SetActive(true);
         initialHeight = cpFixture.transform.position.y;
         grabbed = true;
-        //HideButtons();
-        ShowButtons();
+        SwapButtonSet(buttonPair, modelButton);
     }
 
     override public void HandleTriggerHold()
@@ -96,8 +96,7 @@ public class CuttingPlaneBehaviour : Interactable
             cpBody.velocity = new Vector3(0, relativeControllerVelocity.y, 0);
             slider.SetActive(false);
             grabbed = false;
-            //ShowButtons();
-            //HideButtons();
+            SwapButtonSet(modelButton, buttonPair);
         }
     }
 
@@ -108,10 +107,12 @@ public class CuttingPlaneBehaviour : Interactable
             if (pos.y <= 0)
             {
                 cpFixture.transform.Translate(new Vector3(0, -0.01f, 0));
+                buttonPair.HighlightButton(1);
             }
             else if (pos.y > 0)
             {
                 cpFixture.transform.Translate(new Vector3(0, 0.01f, 0));
+                buttonPair.HighlightButton(0);
             }
             cpBody.velocity = Vector3.zero;
             initialHeight = cpFixture.transform.position.y;
@@ -119,15 +120,5 @@ public class CuttingPlaneBehaviour : Interactable
             Vector3 lookAtPos = new Vector3(cpFixture.transform.position.x, slider.transform.position.y, cpFixture.transform.position.z);
             slider.transform.LookAt(lookAtPos);
         }
-    }
-
-    private void HideButtons()
-    {
-        // buttonPair.SetActive(false);
-    }
-
-    private void ShowButtons()
-    {
-       // buttonPair.SetActive(true);
     }
 }

@@ -76,7 +76,7 @@ public class FloorBehaviour : Interactable
         slider.SetActive(false);
         avatar.SetActive(false);
         //smallScaleModelTableGhosted.SetActive(false);
-        //HideButtons();
+        SwapButtonSet(modelButton, buttonPair);
     }
 
     public override void HandleStay(Vector3 hitPoint)
@@ -108,25 +108,37 @@ public class FloorBehaviour : Interactable
 
     override public void HandleButtonClickDown()
     {
-        if(!isSmallScale && !grabbed)
+        if(!grabbed)
         {
-            tableTeleporter.SetNewPositions(ghostHand.transform.position, useCuttingPlane);
+            modelButton.HighlightButton(0);
+            if(!isSmallScale)
+            {
+                tableTeleporter.SetNewPositions(ghostHand.transform.position, useCuttingPlane);
+            }
+            else
+            {
+
+            }
         }
     }
 
     override public void HandleButtonClickHold() { }
 
-    override public void HandleButtonClickUp() { }
+    override public void HandleButtonClickUp()
+    {
+        buttonPair.RemoveButtonHighlights();
+        modelButton.RemoveButtonHighlights();
+    }
 
     override public void HandleTriggerDown(Vector3 hitPoint)
     {
         slider.transform.position = controllerPose.transform.position;
         Vector3 lookAtPos = new Vector3(ghostHand.transform.position.x, slider.transform.position.y, ghostHand.transform.position.z);
         slider.transform.LookAt(lookAtPos);
-        slider.SetActive(true);
+        //slider.SetActive(true);
         initialRotation = avatar.transform.rotation;
         grabbed = true;
-        //ShowButtons();
+        SwapButtonSet(buttonPair, modelButton);
     }
 
     override public void HandleTriggerHold()
@@ -151,7 +163,7 @@ public class FloorBehaviour : Interactable
         {
             slider.SetActive(false);
             grabbed = false;
-            //HideButtons();
+            SwapButtonSet(modelButton, buttonPair);
 
             TeleportUser();
         }
@@ -164,26 +176,18 @@ public class FloorBehaviour : Interactable
             if (pos.x <= 0)
             {
                 avatar.transform.Rotate(0, -3, 0);
+                buttonPair.HighlightButton(1);
             }
             else if (pos.x > 0)
             {
                 avatar.transform.Rotate(0, 3, 0);
+                buttonPair.HighlightButton(0);
             }
             initialRotation = avatar.transform.rotation;
             slider.transform.position = controllerPose.transform.position;
             Vector3 lookAtPos = new Vector3(avatar.transform.position.x, slider.transform.position.y, avatar.transform.position.z);
             slider.transform.LookAt(lookAtPos);
         }
-    }
-
-    private void HideButtons()
-    {
-        //buttonPair.SetActive(false);
-    }
-
-    private void ShowButtons()
-    {
-       //buttonPair.SetActive(true);
     }
 
     private void TeleportUser()

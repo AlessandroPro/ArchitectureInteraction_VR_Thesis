@@ -6,9 +6,6 @@ using Valve.VR;
 
 public class ModelBaseBehaviour : Interactable
 {
-    public GameObject buttonCW;
-    public GameObject buttonCCW;
-    public GameObject buttonPair;
     public GameObject cameraRig;
     private Quaternion initialRotation;
     private Rigidbody baseBody;
@@ -37,21 +34,11 @@ public class ModelBaseBehaviour : Interactable
             spokes[i] = Instantiate(spokePrefab, transform);
             spokes[i].transform.RotateAround(transform.position, Vector3.up, i * spokeAngle);
         }
-
-        shownButtonsY = buttonPair.transform.position.y - transform.position.y;
-        hiddenButtonsY = shownButtonsY - 0.05f;
-        buttonSpeed = 0.2f;
-
-        buttonsPosY = shownButtonsY;
     }
 
     // Update is called once per frame
     void Update()
     {
-        float step = Time.deltaTime * buttonSpeed;
-        Vector3 buttonsNewPos = new Vector3(buttonPair.transform.position.x, transform.position.y + buttonsPosY, buttonPair.transform.position.z);
-        //buttonPair.transform.position = Vector3.MoveTowards(buttonPair.transform.position, buttonsNewPos, step);
-
         ghostHand.transform.LookAt(new Vector3(transform.position.x, ghostHand.transform.position.y, transform.position.z));
     }
 
@@ -59,6 +46,7 @@ public class ModelBaseBehaviour : Interactable
     {
         controllerPose = pose;
         ghostHand.SetActive(true);
+        ShowHighlight();
 
         /*
         Vector3 centerToUser = user.transform.position - transform.position;
@@ -74,7 +62,7 @@ public class ModelBaseBehaviour : Interactable
         buttonPair.transform.position = new Vector3(buttonPair.transform.position.x, buttonPairYPos, buttonPair.transform.position.z);
         buttonPair.transform.LookAt(buttonPair.transform.position + centerToUser.normalized); 
 
-        ShowButtons();
+        ShowArrowButtons();
         */
     }
 
@@ -82,7 +70,8 @@ public class ModelBaseBehaviour : Interactable
     {
         slider.SetActive(false);
         ghostHand.SetActive(false);
-        HideButtons();
+        HideHighlight();
+        SwapButtonSet(modelButton, buttonPair);
 
     }
 
@@ -116,15 +105,17 @@ public class ModelBaseBehaviour : Interactable
         }
     }
 
-    override public void ShowHighlight() { }
 
-    override public void HideHighlight() { }
 
     override public void HandleButtonClickDown() { }
 
     override public void HandleButtonClickHold() { }
 
-    override public void HandleButtonClickUp() { }
+    override public void HandleButtonClickUp()
+    {
+        buttonPair.RemoveButtonHighlights();
+        modelButton.RemoveButtonHighlights();
+    }
 
     override public void HandleTriggerDown(Vector3 hitPoint)
     {
@@ -132,10 +123,10 @@ public class ModelBaseBehaviour : Interactable
         slider.transform.position = controllerPose.transform.position;
         Vector3 lookAtPos = new Vector3(transform.position.x, slider.transform.position.y, transform.position.z);
         slider.transform.LookAt(lookAtPos);
-        slider.SetActive(true);
+        //slider.SetActive(true);
         initialRotation = transform.rotation;
         grabbed = true;
-        ShowButtons();
+        SwapButtonSet(buttonPair, modelButton);
     }
 
     override public void HandleTriggerHold()
@@ -164,8 +155,8 @@ public class ModelBaseBehaviour : Interactable
             //}
             slider.SetActive(false);
             grabbed = false;
-            //ShowButtons();
-            HideButtons();
+            //ShowArrowButtons();
+            SwapButtonSet(modelButton, buttonPair);
         }
     }
 
@@ -176,10 +167,12 @@ public class ModelBaseBehaviour : Interactable
             if(pos.x <= 0)
             {
                 transform.Rotate(0, 1, 0);
+                buttonPair.HighlightButton(1);
             }
             else if(pos.x > 0)
             {
                 transform.Rotate(0, -1, 0);
+                buttonPair.HighlightButton(0);
             }
             initialRotation = transform.rotation;
             baseBody.angularVelocity = Vector3.zero;
@@ -187,18 +180,6 @@ public class ModelBaseBehaviour : Interactable
             Vector3 lookAtPos = new Vector3(transform.position.x, slider.transform.position.y, transform.position.z);
             slider.transform.LookAt(lookAtPos);
         }
-    }
-
-    private void HideButtons()
-    {
-        //buttonsPosY = hiddenButtonsY;
-        buttonPair.SetActive(false);
-    }
-
-    private void ShowButtons()
-    {
-        // buttonsPosY = shownButtonsY;
-        buttonPair.SetActive(true);
     }
 
     /*
@@ -213,32 +194,4 @@ public class ModelBaseBehaviour : Interactable
         Gizmos.DrawRay(slider.transform.position, controllerPose.GetVelocity() * 5);
     }*/
 
-    /*
-
-    override public void HandleEnter()
-    {
-        Debug.Log("WORKS");
-    }
-
-    override public void HandleExit()
-    {
-        Debug.Log("WORKS");
-    }
-
-    override public void ShowHighlight() { }
-
-    override public void HideHighlight() { }
-
-    override public void HandleButtonClickDown() { }
-
-    override public void HandleButtonClickHold() { }
-
-    override public void HandleButtonClickUp() { }
-
-    override public void HandleTriggerDown() { }
-
-    override public void HandleTriggerHold() { }
-
-    override public void HandleTriggerUp() { }
-    */
 }

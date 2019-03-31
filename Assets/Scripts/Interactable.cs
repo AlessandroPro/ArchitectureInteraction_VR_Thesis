@@ -12,6 +12,11 @@ public abstract class Interactable : MonoBehaviour
     public GameObject ghostHand;
     public GameObject slider;
     public Material laserMat;
+    public ButtonSet buttonPair;
+    public ButtonSet modelButton;
+
+    public MeshRenderer[] highlightMeshes;
+    public Material highlightMat;
 
     // Start is called before the first frame update
     void Start()
@@ -31,10 +36,6 @@ public abstract class Interactable : MonoBehaviour
 
     public abstract void HandleStay(Vector3 hitPoint);
 
-    public abstract void ShowHighlight();
-
-    public abstract void HideHighlight();
-
     public abstract void HandleButtonClickDown();
 
     public abstract void HandleButtonClickHold();
@@ -52,5 +53,29 @@ public abstract class Interactable : MonoBehaviour
     public virtual Material GetLaserMaterial()
     {
         return laserMat;
+    }
+
+    public virtual void ShowHighlight()
+    {
+        foreach (MeshRenderer mesh in highlightMeshes)
+        {
+            Material bodyMat = mesh.material;
+            mesh.materials = new Material[2] { bodyMat, highlightMat };
+        }
+    }
+
+    public virtual void HideHighlight()
+    {
+        foreach (MeshRenderer mesh in highlightMeshes)
+        {
+            Material bodyMat = mesh.material;
+            mesh.materials = new Material[1] { bodyMat };
+        }
+    }
+
+    protected virtual void SwapButtonSet(ButtonSet bsIn, ButtonSet bsOut)
+    {
+        bsOut.Hide();
+        bsIn.Show();
     }
 }

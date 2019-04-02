@@ -9,7 +9,6 @@ public class ModelBaseBehaviour : Interactable
     public GameObject cameraRig;
     private Quaternion initialRotation;
     private Rigidbody baseBody;
-    private Vector3 relativeControllerPos;
 
     private GameObject[] spokes;
     public GameObject spokePrefab;
@@ -47,23 +46,6 @@ public class ModelBaseBehaviour : Interactable
         controllerPose = pose;
         ghostHand.SetActive(true);
         ShowHighlight();
-
-        /*
-        Vector3 centerToUser = user.transform.position - transform.position;
-        Vector3 centreToButtons = buttonPair.transform.position - transform.position;
-        float buttonPairYPos = buttonPair.transform.position.y;
-
-        centerToUser = new Vector3(centerToUser.x, 0, centerToUser.z);
-        centreToButtons = new Vector3(centreToButtons.x, 0, centreToButtons.z);
-
-        float centreToButtonsRadius = centreToButtons.magnitude;
-
-        buttonPair.transform.position = transform.position + (centerToUser.normalized * centreToButtonsRadius);
-        buttonPair.transform.position = new Vector3(buttonPair.transform.position.x, buttonPairYPos, buttonPair.transform.position.z);
-        buttonPair.transform.LookAt(buttonPair.transform.position + centerToUser.normalized); 
-
-        ShowArrowButtons();
-        */
     }
 
     override public void HandleExit()
@@ -107,7 +89,14 @@ public class ModelBaseBehaviour : Interactable
 
 
 
-    override public void HandleButtonClickDown() { }
+    override public void HandleButtonClickDown()
+    {
+        if(!grabbed)
+        {
+            modelButton.HighlightButton(0);
+            tableTeleporter.HideTable();
+        }
+    }
 
     override public void HandleButtonClickHold() { }
 

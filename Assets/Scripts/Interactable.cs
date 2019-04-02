@@ -18,6 +18,9 @@ public abstract class Interactable : MonoBehaviour
     public MeshRenderer[] highlightMeshes;
     public Material highlightMat;
 
+    protected Vector3 relativeControllerPos;
+    public TableTeleporter tableTeleporter;
+
     // Start is called before the first frame update
     void Start()
     {

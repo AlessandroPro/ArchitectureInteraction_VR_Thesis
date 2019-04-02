@@ -10,14 +10,12 @@ public class FloorBehaviour : Interactable
     public GameObject smallScaleModel;
     public GameObject smallScaleModelTable;
     public GameObject smallScaleModelTableGhosted;
-    public TableTeleporter tableTeleporter;
     private Vector3 centerPos;
 
     public GameObject avatar;
     public Transform cameraRig;
     public GameObject cuttingPlane;
 
-    private Vector3 relativeControllerPos;
     private Quaternion initialRotation;
 
     public bool isSmallScale;
@@ -52,7 +50,9 @@ public class FloorBehaviour : Interactable
     // Update is called once per frame
     void Update()
     {
-        if(cuttingPlane.transform.position.y < centerPos.y && !isGhosted)
+        centerPos = GetComponent<Renderer>().bounds.center;
+
+        if (cuttingPlane.transform.position.y < centerPos.y && !isGhosted)
         {
             GetComponent<Collider>().enabled = false;
             isGhosted = true;
@@ -115,10 +115,6 @@ public class FloorBehaviour : Interactable
             {
                 tableTeleporter.SetNewPositions(ghostHand.transform.position, useCuttingPlane);
             }
-            else
-            {
-
-            }
         }
     }
 
@@ -165,7 +161,7 @@ public class FloorBehaviour : Interactable
             grabbed = false;
             SwapButtonSet(modelButton, buttonPair);
 
-            TeleportUser();
+            StartCoroutine(TeleportFade(avatar.transform.position, avatar.transform.forward));
         }
     }
 
@@ -190,15 +186,19 @@ public class FloorBehaviour : Interactable
         }
     }
 
-    private void TeleportUser()
+    // Creates a fade out and fade in effect for the entire display
+    IEnumerator TeleportFade(Vector3 newLocation, Vector3 direction)
     {
-        
+        avatar.SetActive(false);
+        SteamVR_Fade.Start(Color.black, 0.4f);
+        yield return new WaitForSeconds(0.4f);
+
         Vector3 userForward = new Vector3(user.transform.forward.x, 0, user.transform.forward.z);
 
         if (isSmallScale)
         {
-            Vector3 posInSmallModel = smallScaleModel.transform.InverseTransformPoint(avatar.transform.position);
-            Vector3 forwardInSmallModel = smallScaleModel.transform.InverseTransformDirection(avatar.transform.forward);
+            Vector3 posInSmallModel = smallScaleModel.transform.InverseTransformPoint(newLocation);
+            Vector3 forwardInSmallModel = smallScaleModel.transform.InverseTransformDirection(direction);
 
             float angle = Vector3.SignedAngle(userForward, fullScaleModel.transform.TransformDirection(forwardInSmallModel), Vector3.up);
             cameraRig.transform.Rotate(0, angle, 0);
@@ -209,12 +209,15 @@ public class FloorBehaviour : Interactable
         }
         else
         {
-            float angle = Vector3.SignedAngle(userForward, avatar.transform.forward, Vector3.up);
+            float angle = Vector3.SignedAngle(userForward, direction, Vector3.up);
             cameraRig.transform.Rotate(0, angle, 0);
 
             Vector3 difference = cameraRig.transform.position - user.transform.position;
             difference.y = 0;
-            cameraRig.transform.position = avatar.transform.position + difference;
+            cameraRig.transform.position = newLocation + difference;
         }
+
+        avatar.SetActive(true);
+        SteamVR_Fade.Start(Color.clear, 0.4f);
     }
 }

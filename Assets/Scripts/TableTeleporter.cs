@@ -6,6 +6,7 @@ public class TableTeleporter : MonoBehaviour
 {
     public GameObject cuttingPlane;
     public GameObject smallScaleModelTable;
+    public GameObject smallScaleModelBase;
     public GameObject cameraRig;
 
     private Vector3 defaultCuttingPlanePos;
@@ -44,7 +45,10 @@ public class TableTeleporter : MonoBehaviour
         if(!smallScaleModelTable.activeSelf)
         {
             cuttingPlaneTargetPos = defaultCuttingPlanePos;
-            cuttingPlane.transform.position = defaultCuttingPlanePos;
+            if (yDiff > 0.01f)
+            {
+                cuttingPlane.transform.position = defaultCuttingPlanePos;
+            }
         }
 
         float step = planeSpeed * Time.deltaTime;
@@ -65,6 +69,9 @@ public class TableTeleporter : MonoBehaviour
         {
             cuttingPlane.transform.position = defaultCuttingPlanePos;
         }
+
+        smallScaleModelBase.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+        smallScaleModelBase.transform.LookAt(smallScaleModelBase.transform.position + Vector3.forward);
         ShowTable();
     }
 

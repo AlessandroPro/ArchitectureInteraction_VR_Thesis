@@ -12,7 +12,6 @@ public class CuttingPlaneBehaviour : Interactable
     public GameObject joint;
     public GameObject cpFixture;
     public Rigidbody cpBody;
-    private Vector3 relativeControllerPos;
     void Start()
     {
         cpBody = cpFixture.GetComponent<Rigidbody>();
@@ -55,7 +54,14 @@ public class CuttingPlaneBehaviour : Interactable
         }
     }
 
-    override public void HandleButtonClickDown() { }
+    override public void HandleButtonClickDown()
+    {
+        if (!grabbed)
+        {
+            modelButton.HighlightButton(0);
+            tableTeleporter.HideTable();
+        }
+    }
 
     override public void HandleButtonClickHold() { }
 

@@ -42,8 +42,6 @@ public class InteractionPointer : MonoBehaviour
         connectToPoint = transform.position;
         grabHand = Instantiate(grabHandPrefab, transform.position, transform.rotation);
 
-        grabberRate = 20f;
-
         grabSegments = new GameObject[numPoints];
         for (int i = 0; i < grabSegments.Length; i++)
         {
@@ -94,10 +92,13 @@ public class InteractionPointer : MonoBehaviour
         {
             selected.HandleStay(hitPoint);
 
-            if(buttonAction.GetState(handType))
+            if(buttonAction.GetStateDown(handType))
+            {
+                selected.HandleButtonClickDown();
+            }
+            else if(buttonAction.GetState(handType))
             {
                 selected.HandleTrackPadPos(chooseAction.GetAxis(handType));
-                selected.HandleButtonClickDown();
             }
             else if(buttonAction.GetStateUp(handType))
             {
@@ -205,11 +206,13 @@ public class InteractionPointer : MonoBehaviour
 
     private void LaunchGrabber()
     {
+        grabberRate = 20f;
         connectToPoint = grabHandle.position;
     }
 
     private void RetractGrabber()
     {
+        grabberRate = 60f;
         connectToPoint = transform.position;
     }
 

@@ -206,6 +206,7 @@ public class FloorBehaviour : Interactable
             Vector3 difference = cameraRig.transform.position - user.transform.position;
             difference.y = 0;
             cameraRig.transform.position = fullScaleModel.transform.TransformPoint(posInSmallModel) + difference;
+            actionLogger.logAction(ActionLogger.Actions.teleport_model);
         }
         else
         {
@@ -215,6 +216,7 @@ public class FloorBehaviour : Interactable
             Vector3 difference = cameraRig.transform.position - user.transform.position;
             difference.y = 0;
             cameraRig.transform.position = newLocation + difference;
+            actionLogger.logAction(ActionLogger.Actions.teleport_local);
         }
 
         avatar.SetActive(true);

@@ -21,6 +21,8 @@ public abstract class Interactable : MonoBehaviour
     protected Vector3 relativeControllerPos;
     public TableTeleporter tableTeleporter;
 
+    public ActionLogger actionLogger;
+
     // Start is called before the first frame update
     void Start()
     {

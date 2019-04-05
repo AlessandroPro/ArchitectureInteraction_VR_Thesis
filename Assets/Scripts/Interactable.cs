@@ -22,6 +22,8 @@ public abstract class Interactable : MonoBehaviour
     public TableTeleporter tableTeleporter;
 
     public ActionLogger actionLogger;
+    protected bool buttonChoice;
+    protected bool handMovementChoice;
 
     // Start is called before the first frame update
     void Start()

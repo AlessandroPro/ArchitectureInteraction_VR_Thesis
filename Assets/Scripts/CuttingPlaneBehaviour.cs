@@ -90,6 +90,10 @@ public class CuttingPlaneBehaviour : Interactable
             //Get the position of the controller relative to the slider
             relativeControllerPos = slider.transform.InverseTransformPoint(controllerPose.transform.position);
 
+            if (Mathf.Abs(relativeControllerPos.y) > 0.5f)
+            {
+                handMovementChoice = true;
+            }
             cpFixture.transform.position = new Vector3(cpFixture.transform.position.x, initialHeight + relativeControllerPos.y, cpFixture.transform.position.z);
         }
     }
@@ -103,6 +107,17 @@ public class CuttingPlaneBehaviour : Interactable
             slider.SetActive(false);
             grabbed = false;
             SwapButtonSet(modelButton, buttonPair);
+
+            if (buttonChoice)
+            {
+                actionLogger.logAction(ActionLogger.Actions.cp_buttons);
+            }
+            if (handMovementChoice)
+            {
+                actionLogger.logAction(ActionLogger.Actions.cp_hand);
+            }
+            buttonChoice = false;
+            handMovementChoice = false;
         }
     }
 
@@ -125,6 +140,8 @@ public class CuttingPlaneBehaviour : Interactable
             slider.transform.position = controllerPose.transform.position;
             Vector3 lookAtPos = new Vector3(cpFixture.transform.position.x, slider.transform.position.y, cpFixture.transform.position.z);
             slider.transform.LookAt(lookAtPos);
+
+            buttonChoice = true;
         }
     }
 }

@@ -114,6 +114,7 @@ public class FloorBehaviour : Interactable
             if(!isSmallScale)
             {
                 tableTeleporter.SetNewPositions(ghostHand.transform.position, useCuttingPlane);
+                actionLogger.logAction(ActionLogger.Actions.model_move);
             }
         }
     }
@@ -148,6 +149,11 @@ public class FloorBehaviour : Interactable
             //Get the position of the controller relative to the slider
             relativeControllerPos = slider.transform.InverseTransformPoint(controllerPose.transform.position);
 
+            if (Mathf.Abs(relativeControllerPos.x) > 1)
+            {
+                handMovementChoice = true;
+            }
+
             Quaternion target = Quaternion.Euler(0, relativeControllerPos.x * 50f, 0) * initialRotation;
             avatar.transform.rotation = Quaternion.Slerp(avatar.transform.rotation, target, Time.deltaTime * 5f);
         }
@@ -160,6 +166,17 @@ public class FloorBehaviour : Interactable
             slider.SetActive(false);
             grabbed = false;
             SwapButtonSet(modelButton, buttonPair);
+
+            if (buttonChoice)
+            {
+                actionLogger.logAction(ActionLogger.Actions.avatar_buttons);
+            }
+            if (handMovementChoice)
+            {
+                actionLogger.logAction(ActionLogger.Actions.avatar_hand);
+            }
+            buttonChoice = false;
+            handMovementChoice = false;
 
             StartCoroutine(TeleportFade(avatar.transform.position, avatar.transform.forward));
         }
@@ -183,6 +200,8 @@ public class FloorBehaviour : Interactable
             slider.transform.position = controllerPose.transform.position;
             Vector3 lookAtPos = new Vector3(avatar.transform.position.x, slider.transform.position.y, avatar.transform.position.z);
             slider.transform.LookAt(lookAtPos);
+
+            buttonChoice = true;
         }
     }
 

@@ -33,6 +33,9 @@ public class ModelBaseBehaviour : Interactable
             spokes[i] = Instantiate(spokePrefab, transform);
             spokes[i].transform.RotateAround(transform.position, Vector3.up, i * spokeAngle);
         }
+
+        buttonChoice = false;
+        handMovementChoice = false;
     }
 
     // Update is called once per frame
@@ -125,6 +128,10 @@ public class ModelBaseBehaviour : Interactable
             //Get the position of the controller relative to the slider
             relativeControllerPos = slider.transform.InverseTransformPoint(controllerPose.transform.position);
 
+            if (Mathf.Abs(relativeControllerPos.x) > 1)
+            {
+                handMovementChoice = true;
+            }
             Quaternion target = Quaternion.Euler(0, -relativeControllerPos.x * 20f, 0) * initialRotation;
             transform.rotation = Quaternion.Slerp(transform.rotation, target, Time.deltaTime * 5f);
         }
@@ -144,8 +151,19 @@ public class ModelBaseBehaviour : Interactable
             //}
             slider.SetActive(false);
             grabbed = false;
-            //ShowArrowButtons();
+  
             SwapButtonSet(modelButton, buttonPair);
+
+            if (buttonChoice)
+            {
+                actionLogger.logAction(ActionLogger.Actions.model_buttons);
+            }
+            if(handMovementChoice)
+            {
+                actionLogger.logAction(ActionLogger.Actions.model_hand);
+            }
+            buttonChoice = false;
+            handMovementChoice = false;
         }
     }
 
@@ -168,6 +186,8 @@ public class ModelBaseBehaviour : Interactable
             slider.transform.position = controllerPose.transform.position;
             Vector3 lookAtPos = new Vector3(transform.position.x, slider.transform.position.y, transform.position.z);
             slider.transform.LookAt(lookAtPos);
+
+            buttonChoice = true;
         }
     }
 

@@ -13,6 +13,8 @@ public class OrbHandler : MonoBehaviour
     private float arrowRotation;
     private int orbIndex;
 
+    public ActionLogger actionLogger;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -73,6 +75,7 @@ public class OrbHandler : MonoBehaviour
         {
             activeOrb = orbs[orbIndex];
             activeOrb.turnOn();
+            actionLogger.logAction(ActionLogger.Actions.orb_touch);
         }   
     }
 }

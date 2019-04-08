@@ -9,7 +9,6 @@ public class FloorBehaviour : Interactable
     public GameObject fullScaleModel;
     public GameObject smallScaleModel;
     public GameObject smallScaleModelTable;
-    public GameObject smallScaleModelTableGhosted;
     private Vector3 centerPos;
 
     public GameObject avatar;
@@ -33,7 +32,6 @@ public class FloorBehaviour : Interactable
 
 
         avatar.SetActive(false);
-        smallScaleModelTableGhosted.SetActive(false);
 
         if (cuttingPlane.transform.position.y < centerPos.y)
         {
@@ -68,15 +66,15 @@ public class FloorBehaviour : Interactable
     {
         controllerPose = pose;
         avatar.SetActive(true);
-       // smallScaleModelTableGhosted.SetActive(true);
+        ShowButtonSet(modelButton);
     }
 
     override public void HandleExit()
     {
         slider.SetActive(false);
         avatar.SetActive(false);
-        //smallScaleModelTableGhosted.SetActive(false);
-        SwapButtonSet(modelButton, buttonPair);
+        HideButtonSet(buttonPair);
+        HideButtonSet(modelButton);
     }
 
     public override void HandleStay(Vector3 hitPoint)
@@ -90,13 +88,6 @@ public class FloorBehaviour : Interactable
             {
                 //smallScaleModelTableGhosted.transform.position = hitPoint;
                 //smallScaleModelTable.transform.position = hitPoint;
-            }
-        }
-        else
-        {
-            if (!isSmallScale)
-            {
-                smallScaleModelTableGhosted.SetActive(false);
             }
         }
         avatar.transform.position = ghostHand.transform.position;

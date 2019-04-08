@@ -85,4 +85,14 @@ public abstract class Interactable : MonoBehaviour
         bsOut.Hide();
         bsIn.Show();
     }
+
+    protected virtual void ShowButtonSet(ButtonSet bs)
+    {
+        bs.Show();
+    }
+
+    protected virtual void HideButtonSet(ButtonSet bs)
+    {
+        bs.Hide();
+    }
 }

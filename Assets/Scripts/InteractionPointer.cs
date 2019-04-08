@@ -12,7 +12,6 @@ public class InteractionPointer : MonoBehaviour
     public SteamVR_Behaviour_Pose controllerPose;
     public SteamVR_Action_Boolean grabAction;
     public SteamVR_Action_Boolean buttonAction;
-    public SteamVR_Action_Boolean toggleModelAction;
     public SteamVR_Action_Vector2 chooseAction;
 
     public LineRenderer laserLine;
@@ -27,7 +26,6 @@ public class InteractionPointer : MonoBehaviour
     private Vector3 xVector;
     private Vector3 yVector;
     private GameObject[] grabSegments;
-    private float handTime;
     private Vector3 connectToPoint;
 
     public GameObject grabHandPrefab;
@@ -47,8 +45,6 @@ public class InteractionPointer : MonoBehaviour
         {
             grabSegments[i] = Instantiate(grabSegmentPrefab);
         }
-
-        handTime = 0;
         hitPoint = controllerPose.transform.position + (transform.forward * 100);
 
         ShowLaser();
@@ -123,11 +119,6 @@ public class InteractionPointer : MonoBehaviour
                 grabHandle = null;
                 RetractGrabber();
             }
-        }
-
-        if(toggleModelAction.GetStateDown(handType))
-        {
-            //toggleScaleModel();
         }
 
         UpdateLaser();

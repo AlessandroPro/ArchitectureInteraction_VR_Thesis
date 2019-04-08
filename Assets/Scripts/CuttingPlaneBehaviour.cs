@@ -31,6 +31,7 @@ public class CuttingPlaneBehaviour : Interactable
         controllerPose = pose;
         ghostHand.SetActive(true);
         ShowHighlight();
+        ShowButtonSet(modelButton);
     }
 
     override public void HandleExit()
@@ -38,7 +39,8 @@ public class CuttingPlaneBehaviour : Interactable
         slider.SetActive(false);
         ghostHand.SetActive(false);
         HideHighlight();
-        SwapButtonSet(modelButton, buttonPair);
+        HideButtonSet(buttonPair);
+        HideButtonSet(modelButton);
     }
 
     public override void HandleStay(Vector3 hitPoint)
@@ -60,6 +62,7 @@ public class CuttingPlaneBehaviour : Interactable
         {
             modelButton.HighlightButton(0);
             tableTeleporter.HideTable();
+            actionLogger.logAction(ActionLogger.Actions.model_hide);
         }
     }
 

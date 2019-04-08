@@ -49,6 +49,7 @@ public class ModelBaseBehaviour : Interactable
         controllerPose = pose;
         ghostHand.SetActive(true);
         ShowHighlight();
+        ShowButtonSet(modelButton);
     }
 
     override public void HandleExit()
@@ -56,8 +57,8 @@ public class ModelBaseBehaviour : Interactable
         slider.SetActive(false);
         ghostHand.SetActive(false);
         HideHighlight();
-        SwapButtonSet(modelButton, buttonPair);
-
+        HideButtonSet(buttonPair);
+        HideButtonSet(modelButton);
     }
 
     public override void HandleStay(Vector3 hitPoint)
@@ -98,6 +99,7 @@ public class ModelBaseBehaviour : Interactable
         {
             modelButton.HighlightButton(0);
             tableTeleporter.HideTable();
+            actionLogger.logAction(ActionLogger.Actions.model_hide);
         }
     }
 

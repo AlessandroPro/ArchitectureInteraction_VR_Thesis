@@ -19,9 +19,9 @@ The results of the user study showed that the design of the program was mostly a
 
 <img width="952" alt="Screen Shot 2020-01-12 at 10 28 39 PM" src="https://user-images.githubusercontent.com/15040875/72231785-54f09280-358b-11ea-8d9a-d5af5cbcf7c2.png">
 
-<img width="936" alt="Screen Shot 2020-01-12 at 10 43 45 PM" src="https://user-images.githubusercontent.com/15040875/72232123-1a87f500-358d-11ea-8a59-4f4850f29d08.png">
+<img width="823" alt="Screen Shot 2020-01-12 at 10 44 14 PM" src="https://user-images.githubusercontent.com/15040875/72232235-b9145600-358d-11ea-9735-5f9571d181fe.png">
 
-<img width="827" alt="Screen Shot 2020-01-12 at 10 44 14 PM" src="https://user-images.githubusercontent.com/15040875/72232122-1a87f500-358d-11ea-96d2-d150e9ae467d.png">
+<img width="932" alt="Screen Shot 2020-01-12 at 10 43 45 PM" src="https://user-images.githubusercontent.com/15040875/72232234-b87bbf80-358d-11ea-9623-b83b766d931c.png">
 
 <img width="876" alt="Screen Shot 2020-01-12 at 10 29 46 PM" src="https://user-images.githubusercontent.com/15040875/72231782-54f09280-358b-11ea-8101-115b1f266ed8.png">
 

@@ -1,11 +1,13 @@
 # VR Thesis Project
 
 This program was developed as part of an undergraduate research project in my final year at Ryerson University.
-Pasted below are the figure and abstract from the paper I wrote, which describe the research, VR application, and user study. 
+Pasted below are the figures and abstract from the paper I wrote, which describe the research, VR application, and user study. 
 
 This was developed in Unity using the HTC Vive and SteamVR.
 
 ### 'Designing an Architectural Model Explorer for Intuitive Interaction and Navigation in Virtual Reality'
+
+#### Abstract 
 
 The availability of modern virtual reality (VR) technology provides increasingly immersive ways for the average person to observe and view building models. In this paper, prior research of multi-scale virtual environments, interaction and navigation methods, and existing commercial software were combined and extended to design a simple and intuitive architectural model explorer in VR. Specifically, this paper aimed at understanding how such a program should interface with a naïve user, that is, someone inexperienced with VR and architecture. A user study was conducted with 10 participants to observe the holistic effectiveness of the design decisions of the created program, such as the navigational benefits of the moveable small-scale model and its WIM-like interface.
 

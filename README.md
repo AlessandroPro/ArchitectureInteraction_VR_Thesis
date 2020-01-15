@@ -1,15 +1,18 @@
 # VR Thesis Project
 
-This program was developed as part of an undergraduate research project in my final year at Ryerson University.
+This program was developed as part of an undergraduate research project in my final year studying Computer Science at Ryerson University.
 Pasted below are the figures and abstract from the paper I wrote, which describe the research, VR application, and user study. 
 
-This was developed in Unity using the HTC Vive and SteamVR.
+This was developed in Unity using the HTC Vive and SteamVR. <br>
+All relevant code is within the scripts in /Assets/Scripts/. <br>
+All 3D assets (except for the model table), and the shaders used for the cutting plane, were downloaded from third-party sources.
+
 
 ### 'Designing an Architectural Model Explorer for Intuitive Interaction and Navigation in Virtual Reality'
 
 #### Abstract 
 
-The availability of modern virtual reality (VR) technology provides increasingly immersive ways for the average person to observe and view building models. In this paper, prior research of multi-scale virtual environments, interaction and navigation methods, and existing commercial software were combined and extended to design a simple and intuitive architectural model explorer in VR. Specifically, this paper aimed at understanding how such a program should interface with a naïve user, that is, someone inexperienced with VR and architecture. A user study was conducted with 10 participants to observe the holistic effectiveness of the design decisions of the created program, such as the navigational benefits of the moveable small-scale model and its WIM-like interface.
+The availability of modern virtual reality (VR) technology provides increasingly immersive ways for the average person to observe and view building models. In this paper, prior research of multi-scale virtual environments, interaction and navigation methods, and existing commercial software were combined and extended to design a simple and intuitive architectural model explorer in VR. Specifically, this paper aimed at understanding how such a program should interface with a naïve user, that is, someone inexperienced with VR and architecture. A user study was conducted with 10 participants to observe the holistic effectiveness of the design decisions of the created program, such as the navigational benefits of the moveable small-scale model and its WIM-like interface.
 
 The program was developed in Unity for the HTC Vive VR headset and was designed to include a full-scale model of a building and a small-scale 1:10 version of the same building within the same virtual space. The small-scale model can be moved wherever the user chooses or hidden completely. It can also be rotated and sectioned-off using a cutting plane. The user can teleport within the full-scale model by selecting a point on the ground around them or by choosing a point in the small-scale model. All interaction methods, including navigation, are initiated using a remote point and grab technique, combined with visual cues like colour changes, highlights, and affordances. Once something is grabbed, it can be manipulated using either hand motion or directional buttons on the controller’s trackpad. With multiple options for teleportation and manipulation techniques, each user was given a navigational task and recorded and surveyed to understand their preferences and/or frustrations.
 

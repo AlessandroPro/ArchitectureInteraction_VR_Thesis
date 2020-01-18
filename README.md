@@ -1,6 +1,6 @@
 # VR Thesis Project
 
-This program was developed as part of an undergraduate research project in my final year studying Computer Science at Ryerson University. It explores how a small-scale model of a building can be interacted with to navigate a the full-scale model of the same building.
+This program was developed as part of an undergraduate research project in my final year studying Computer Science at Ryerson University. It explores how a small-scale model of a building can be interacted with to help navigate a full-scale model of the same building.
 Pasted below are the figures and abstract from the paper I wrote, which describe the research, VR application, and user study. 
 
 This was developed in Unity using the HTC Vive and SteamVR. <br>
